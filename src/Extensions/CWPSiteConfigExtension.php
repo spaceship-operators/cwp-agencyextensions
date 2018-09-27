@@ -103,6 +103,16 @@ class CWPSiteConfigExtension extends DataExtension
      * @var array
      */
     private static $theme_colors = [
+        'default-accent' => [
+            'Title' => 'Default accent',
+            'CSSClass' => 'default-accent',
+            'Color' => '#0F7EB2',
+        ],
+        'default-background' => [
+            'Title' => 'Default background',
+            'CSSClass' => 'default-background',
+            'Color' => '#001F2C',
+        ],
         'red' => [
             'Title' => 'Red',
             'CSSClass' => 'red',
@@ -132,16 +142,6 @@ class CWPSiteConfigExtension extends DataExtension
             'Title' => 'Dark blue',
             'CSSClass' => 'dark-blue',
             'Color' => '#123581',
-        ],
-        'default-accent' => [
-            'Title' => 'Default accent',
-            'CSSClass' => 'default-accent',
-            'Color' => '#0F7EB2',
-        ],
-        'default-background' => [
-            'Title' => 'Default background',
-            'CSSClass' => 'default-background',
-            'Color' => '#001F2C',
         ],
         'teal' => [
             'Title' => 'Teal',

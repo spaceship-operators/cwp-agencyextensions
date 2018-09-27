@@ -3,7 +3,11 @@ summary: Information on configuration around the theme color picker
 
 # Theme color picker
 
-The theme color picker is a way of providing CMS users to adjust the colors of different areas of their site without requiring developer intervention.
+The theme color picker is a way of providing CMS users to adjust the colors of different areas of their site without requiring developer intervention. For a more CMS admin friendly approach, ensure the ColorPalette module is installed:
+
+```bash
+$ composer require heyday/silverstripe-colorpalette
+```
 
 ## Enabling
 
@@ -32,4 +36,16 @@ SilverStripe\SiteConfig\SiteConfig:
       Color: '#594116'
 ```
 
-TODO: Adding the new/different color to the scss in the theme
+Now you can add the matching color to your scss. Assuming your project is using a custom theme which imports watea's `main.scss` file, create a `$custom-theme-colors` as follows:
+
+```scss
+// themes/customtheme/scss/main.scss
+
+// Ensure this variable is set before importing watea scss
+$custom-theme-colors: (
+  'pink': #C12099, // Adjusting existing pink color
+  'brown': #594116 // Adding new brown color
+);
+
+@import '../../../watea/src/scss/main';
+```
