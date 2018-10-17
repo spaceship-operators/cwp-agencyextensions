@@ -4,7 +4,7 @@ import { inject } from 'lib/Injector';
 import i18n from 'i18n';
 import { Button } from 'reactstrap';
 
-class ColorPickerField extends Component {
+class FontPickerField extends Component {
   constructor(props) {
     super(props);
 
@@ -14,6 +14,7 @@ class ColorPickerField extends Component {
     this.state = {
       isOpen: false,
       value: props.value,
+      selectedFont: 'inherit',
     };
   }
 
@@ -22,6 +23,7 @@ class ColorPickerField extends Component {
       this.handleToggle();
       this.setState({
         value: button.key,
+        selectedFont: button.text
       });
     };
   }
@@ -32,72 +34,68 @@ class ColorPickerField extends Component {
     });
   }
 
-  renderButton() {
+  renderSelectorButton() {
     const { value } = this.state;
-    const { colors, name } = this.props;
-    let color;
+    const { fonts, name } = this.props;
+    let font;
 
     if (value) {
-      color = colors.find(({ CSSClass }) => CSSClass === value);
+      font = fonts.find(({ CSSClass }) => CSSClass === value);
     }
-    if (!color) {
-      color = colors[0];
+    if (!font) {
+      font = fonts[0];
     }
 
     return (
       <Button
         id={`Popover_${name}`}
         onClick={this.handleToggle}
-        className="color-picker-field-button"
+        className="font-picker-field-button font-icon-caret-up-down"
       >
-        <div
-          className="color-picker-field-button__color-icon"
-          style={{ backgroundColor: color ? color.Color : 'transparent' }}
-        />
-        <div className="color-picker-field-button__color-label">
-          { color ? color.Title : <em>None</em> }
-        </div>
+        { font ? font.Title : <em>None</em> }
       </Button>
     );
   }
 
   renderPopover() {
-    const { PopoverOptionSetComponent, colors, name } = this.props;
+    const { PopoverOptionSetComponent, fonts, name } = this.props;
     const { isOpen } = this.state;
 
-    const buttonContent = (color) => [
-      <span
-        className="color-picker-field-popover__option-icon"
-        style={{ backgroundColor: color.Color }}
-      />,
-      <span className="color-picker-field-popover__option-label">
-        {color.Title}
-      </span>
-    ];
-
-    const buttons = colors.map((color) => ({
-      key: color.CSSClass,
-      content: buttonContent(color),
-      className: 'color-picker-field-popover__option',
-      text: color.Title,
+    const buttons = fonts.map((font) => ({
+      key: font.CSSClass,
+      content: font.Title,
+      className: 'font-picker-field-popover__option',
+      buttonProps: { style: { fontFamily: `"${font.Title}"` } },
+      text: font.Title,
     }));
-
-    const handleSearch = (term, set) => set.filter(
-      ({ text }) => text.toLowerCase().includes(term.toLowerCase())
-    );
 
     return (
       <PopoverOptionSetComponent
         buttons={buttons}
         provideButtonClickHandler={this.handleButtonClick}
-        searchPlaceholder={i18n._t('ColorPickerField.SEARCH_BLOCKS', 'Search colors')}
-        className="color-picker-field-popover"
+        searchPlaceholder={i18n._t('FontPickerField.SEARCH_BLOCKS', 'Search font families')}
+        className="font-picker-field-popover"
         placement="bottom-start"
-        onSearch={handleSearch}
         isOpen={isOpen}
         target={`Popover_${name}`}
         toggle={this.handleToggle}
       />
+    );
+  }
+
+  renderSelectedFontPreview() {
+    const { selectedFont } = this.state;
+    const previewText = i18n._t(
+      'FontPickerField.PREVIEW_FONT',
+      'The quick brown fox jumped over the lazy dog'
+    );
+    return (
+      <div
+        className="font-picker-field__selection-preview"
+        style={{ fontFamily: `"${selectedFont}"` || 'inherit' }}
+      >
+        { previewText }
+      </div>
     );
   }
 
@@ -107,19 +105,19 @@ class ColorPickerField extends Component {
 
     return (
       <div>
-        { this.renderButton() }
+        { this.renderSelectorButton() }
         { this.renderPopover() }
+        { this.renderSelectedFontPreview() }
         <input name={name} type="hidden" value={value} />
       </div>
     );
   }
 }
 
-ColorPickerField.proptypes = {
-  colors: PropTypes.arrayOf(PropTypes.shape({
+FontPickerField.proptypes = {
+  fonts: PropTypes.arrayOf(PropTypes.shape({
     Title: PropTypes.text,
     CSSClass: PropTypes.text,
-    Color: PropTypes.text,
   })),
   name: PropTypes.string,
   value: PropTypes.string,
@@ -128,5 +126,5 @@ ColorPickerField.proptypes = {
 export default inject(
   ['PopoverOptionSet'],
   (PopoverOptionSetComponent) => ({ PopoverOptionSetComponent }),
-  () => 'ColorPickerField'
-)(ColorPickerField);
+  () => 'FontPickerField'
+)(FontPickerField);
